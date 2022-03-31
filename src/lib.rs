@@ -7,12 +7,13 @@ pub fn get_req() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 pub fn get_coords(city: &str, country: &str) -> Result<(String, String), String> {
+    use json_schema::json_location_schema::LocationSchema;
     let req = blocking::get(format!(
         "http://api.openweathermap.org/geo/1.0/direct?q={}&limit=5&appid={}",
         city, API_KEY
     ))
     .unwrap()
-    .json::<json_schema::json_location_schema::LocationSchema>().unwrap();
+    .json::<LocationSchema>().unwrap();
     let mut long = None;
     let mut lat = None;
     for location in &req {
