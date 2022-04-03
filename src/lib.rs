@@ -13,7 +13,8 @@ pub fn get_coords(city: &str, country: &str) -> Result<(String, String), String>
         city, API_KEY
     ))
     .unwrap()
-    .json::<LocationSchema>().unwrap();
+    .json::<LocationSchema>()
+    .unwrap();
     let mut long = None;
     let mut lat = None;
     for location in &req {
@@ -28,4 +29,20 @@ pub fn get_coords(city: &str, country: &str) -> Result<(String, String), String>
     } else {
         Err("No country found".to_string())
     }
+}
+
+pub fn get_weather(coords: (String, String)) -> String {
+    //TODO: Add error handling
+    use json_schema::json_weather_schema::WeatherSchema;
+    let req = blocking::get(format!(
+        "https://api.openweathermap.org/data/2.5/onecall?lat={}&lon={}&exclude=hourly,daily,minutely&appid={}",
+        coords.0, coords.1, API_KEY
+    )).expect("Cant get weather").json::<WeatherSchema>().expect("Cant parse weather");
+    // let mut weather = String::new();
+    let weather = to_celcius(req.current.temp).to_string();
+    weather
+}
+
+fn to_celcius(kelvin: f64) -> f64 {
+    kelvin - 272.15
 }

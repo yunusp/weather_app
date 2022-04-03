@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+// #![windows_subsystem = "windows"]
 
 extern crate native_windows_derive as nwd;
 extern crate native_windows_gui as nwg;
@@ -37,9 +37,13 @@ pub struct BasicApp {
     #[nwg_layout_item(layout: grid_layout, row:2, col: 2)]
     long: nwg::Label,
 
+    #[nwg_control(text: "0", size: (500, 15))]
+    #[nwg_layout_item(layout: grid_layout, row:3, col: 2)]
+    temp: nwg::Label,
+
     #[nwg_control(text: "get", size: (1, 1))]
     #[nwg_layout_item(layout: grid_layout, row:1, col: 1)]
-    #[nwg_events( OnButtonClick: [BasicApp::set_coords] )]
+    #[nwg_events( OnButtonClick: [BasicApp::set_temp] )]
     get: nwg::Button,
 }
 
@@ -53,14 +57,28 @@ impl BasicApp {
         self.lat.set_text(&x);
         self.long.set_text(&y);
     }
+    #[allow(dead_code)]
     fn handle_resize(&self) {
         let (w, h) = &self.window.size();
         let _ = &self.get.set_position((*w / 2) as i32, (*h / 2) as i32);
     }
+    fn set_temp(&self) {
+        use weather_api::get_weather;
+        let temp = get_weather((self.lat.text().to_string(), self.long.text().to_string()));
+        self.temp.set_text(&temp);
+    }
+
+    // fn handle_click(&self) {
+    //     self.set_temp();
+    //     self.set_coords()
+    // }
 }
 fn main() {
+    println!("hello");
+    use weather_api::get_weather;
     nwg::init().expect("Failed to init Native Windows GUI");
     nwg::Font::set_global_family("Segoe UI").expect("Failed to set default font");
     let _app = BasicApp::build_ui(Default::default()).expect("Failed to build UI");
     nwg::dispatch_thread_events();
+    println!("hello {}", get_weather(("33.44".to_string(),"-94.04".to_string())));
 }

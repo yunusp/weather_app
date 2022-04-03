@@ -29,3 +29,84 @@ pub mod json_location_schema {
         pub state: String,
     }
 }
+
+pub mod json_weather_schema {
+    use serde::{Serialize, Deserialize};
+    #[derive(Serialize, Deserialize)]
+    pub struct WeatherSchema {
+        #[serde(rename = "lat")]
+        pub lat: f64,
+
+        #[serde(rename = "lon")]
+        pub lon: f64,
+
+        #[serde(rename = "timezone")]
+        pub timezone: String,
+
+        #[serde(rename = "timezone_offset")]
+        pub timezone_offset: i64,
+
+        #[serde(rename = "current")]
+        pub current: Current,
+    }
+
+    #[derive(Serialize, Deserialize)]
+    pub struct Current {
+        #[serde(rename = "dt")]
+        dt: i64,
+
+        #[serde(rename = "sunrise")]
+        sunrise: i64,
+
+        #[serde(rename = "sunset")]
+        sunset: i64,
+
+        #[serde(rename = "temp")]
+        pub temp: f64,
+
+        #[serde(rename = "feels_like")]
+        pub feels_like: f64,
+
+        #[serde(rename = "pressure")]
+        pressure: f64,
+
+        #[serde(rename = "humidity")]
+        pub humidity: f64,
+
+        #[serde(rename = "dew_point")]
+        dew_point: f64,
+
+        #[serde(rename = "uvi")]
+        uvi: f64,
+
+        #[serde(rename = "clouds")]
+        clouds: f64,
+
+        #[serde(rename = "visibility")]
+        visibility: f64,
+
+        #[serde(rename = "wind_speed")]
+        wind_speed: f64,
+
+        #[serde(rename = "wind_deg")]
+        wind_deg: f64,
+
+        #[serde(rename = "weather")]
+        weather: Vec<Weather>,
+    }
+
+    #[derive(Serialize, Deserialize)]
+    pub struct Weather {
+        #[serde(rename = "id")]
+        id: i64,
+
+        #[serde(rename = "main")]
+        pub main: String,
+
+        #[serde(rename = "description")]
+        pub description: String,
+
+        #[serde(rename = "icon")]
+        icon: String,
+    }
+}
